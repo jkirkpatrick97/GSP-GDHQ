@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
     private float _damageCoolDown = 0.5f;
     [SerializeField]
     private float _thusterBoostMultiplier = 1.6f;
+    [SerializeField]
+    private int _ammoCount = 15;
 
 
     private float lastDamageTime = 0;
@@ -47,6 +49,8 @@ public class Player : MonoBehaviour
     private AudioClip _laserSoundClip;
     [SerializeField]
     private AudioClip _explosionSoundClip;
+    [SerializeField]
+    private AudioClip _noAmmoSoundClip;
     
     private AudioSource _audioSource;
 
@@ -145,17 +149,29 @@ public class Player : MonoBehaviour
     void FireLaser()
     {            
         _canFire = Time.time + _fireRate;
-        if (_tripleshotEnabled == true)
+        if (_tripleshotEnabled == true && _ammoCount > 2)
         {
             Instantiate(_tripleshotPrefab, transform.localPosition + _laserOffset, Quaternion.identity);
-            
+            _ammoCount -= 3;
+            _uiManager.UpdateAmmo(_ammoCount);
+            _audioSource.clip = _laserSoundClip;
+            _audioSource.Play();
+
+        }
+        else if (_ammoCount > 0)
+        {
+            Instantiate(_laserPrefab, transform.localPosition + _laserOffset, Quaternion.identity);
+            _ammoCount -= 1;
+            _uiManager.UpdateAmmo(_ammoCount);
+            _audioSource.clip = _laserSoundClip;
+            _audioSource.Play();
         }
         else
         {
-            Instantiate(_laserPrefab, transform.localPosition + _laserOffset, Quaternion.identity);
+            _audioSource.clip = _noAmmoSoundClip;
+            _audioSource.Play();
         }
-        _audioSource.clip = _laserSoundClip;
-        _audioSource.Play();
+        
     }
 
     public void Damage()
@@ -212,6 +228,8 @@ public class Player : MonoBehaviour
     public void TripleShotActive()
     {
         _tripleshotEnabled = true;
+        _ammoCount += 30;
+        _uiManager.UpdateAmmo(_ammoCount);
         StartCoroutine(TrippleShotPowerDownRoutine());
     }
 
