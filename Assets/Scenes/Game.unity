@@ -911,7 +911,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1615447205
 GameObject:
@@ -1663,6 +1663,7 @@ MonoBehaviour:
   _rightEngine: {fileID: 242361279}
   _leftEngine: {fileID: 498330234}
   _damageCoolDown: 0.5
+  _thusterBoostMultiplier: 1.6
   _score: 0
   _laserSoundClip: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
   _explosionSoundClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
@@ -1724,7 +1725,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008458342}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.79, y: 0, z: 0}
+  m_LocalPosition: {x: -6.76, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 1777631248}
@@ -2113,7 +2114,7 @@ PrefabInstance:
     - target: {fileID: 1507072239069185915, guid: c4656e95b34d9e0418e4884e3740b016,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1507072239069185915, guid: c4656e95b34d9e0418e4884e3740b016,
         type: 3}

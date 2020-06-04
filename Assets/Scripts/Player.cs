@@ -31,13 +31,14 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _thusterBoostMultiplier = 1.6f;
 
+
     private float lastDamageTime = 0;
+    private int _shieldStrength = 0;
 
     private SpawnManager _spawnManager;
 
     private bool _tripleshotEnabled = false;
-    private bool _shieldsActive;
-    
+        
     [SerializeField]
     private int _score;
 
@@ -161,10 +162,23 @@ public class Player : MonoBehaviour
     {
         if (lastDamageTime <= Time.time - _damageCoolDown)
         {
-            if (_shieldsActive == true)
+            if (_shieldStrength > 0)
             {
-                _shieldsActive = false;
-                _playerShield.SetActive(false);
+                _shieldStrength -= 1;
+                if(_shieldStrength == 2)
+                {
+                    _playerShield.GetComponent<SpriteRenderer>().color = Color.yellow;
+                }
+                else
+                {
+                    _playerShield.GetComponent<SpriteRenderer>().color = Color.red;
+                }
+                
+
+                if(_shieldStrength < 1)
+                {
+                    _playerShield.SetActive(false);
+                }
                 return;
             }
 
@@ -194,6 +208,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    
     public void TripleShotActive()
     {
         _tripleshotEnabled = true;
@@ -208,24 +223,21 @@ public class Player : MonoBehaviour
 
     public void SpeedBoostActive()
     {
-        //_speedBoostActive = true;
         _speed *= _speedMultiplier;
         StartCoroutine(SpeedBoostPowerDown());
-            
-        
     }
 
     IEnumerator SpeedBoostPowerDown()
     {
         yield return new WaitForSeconds(5.0f);
-        //_speedBoostActive = false;
         _speed /= _speedMultiplier;
     }
 
     public void ShieldsActive()
     {
-        _shieldsActive = true;
+        _playerShield.GetComponent<SpriteRenderer>().color = Color.white;
         _playerShield.SetActive(true);
+        _shieldStrength = 3;
     }
 
     public void AddScore(int points)
