@@ -28,6 +28,8 @@ public class Player : MonoBehaviour
     private GameObject _leftEngine;
     [SerializeField]
     private float _damageCoolDown = 0.5f;
+    [SerializeField]
+    private float _thusterBoostMultiplier = 1.6f;
 
     private float lastDamageTime = 0;
 
@@ -90,6 +92,15 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             FireLaser();
+        }
+
+        if(Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            _speed *= _thusterBoostMultiplier;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _speed /= _thusterBoostMultiplier;
         }
                 
     }
