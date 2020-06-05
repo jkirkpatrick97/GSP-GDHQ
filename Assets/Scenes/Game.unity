@@ -840,6 +840,7 @@ MonoBehaviour:
   - {fileID: 2363724582743147593, guid: c43b03051afdea74d8c4b9ebc6951473, type: 3}
   - {fileID: 2157901724931518078, guid: 0eac574bdf5e1394b8f9a69f4f922bb4, type: 3}
   - {fileID: 8788614195999648122, guid: 98cdc602336d88b489dcccea88445e60, type: 3}
+  - {fileID: 292123749247369937, guid: e5eddaf0697704d41b4a71800ad1f1b3, type: 3}
   enemyWaitTime: 5
   _enemyContainer: {fileID: 2056561658}
 --- !u!4 &609541475
