@@ -44,6 +44,9 @@ public class Powerup : MonoBehaviour
                     case 3:
                         player.IncreaseAmmo();
                         break;
+                    case 4:
+                        player.ExtraLife();
+                        break;
                     default:
                         Debug.Log("Default");
                         break;                        
