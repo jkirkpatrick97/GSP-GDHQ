@@ -55,7 +55,6 @@ public class Enemy : MonoBehaviour
         {
             float randomX = Random.Range(-9f, 9f);
             transform.position = new Vector3(randomX, 7, transform.position.z);
-
         }
     }
 
@@ -69,7 +68,6 @@ public class Enemy : MonoBehaviour
                 _canFire = Time.time + _fireRate;
                 GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
                 Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-                Debug.Log("lasers length = " + lasers.Length);
 
                 for (int i = 0; i < lasers.Length; i++)
                 {
@@ -97,9 +95,9 @@ public class Enemy : MonoBehaviour
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.8f);
         }
-        else if (other.tag == "PlayerLaser")
+        else if (other.tag == "PlayerLaser" || other.tag == "PlayerMissile")
         {
-            Destroy(other.gameObject);
+            Destroy(other.gameObject, 0.1f);
             if (_player != null)
             {
                 _player.AddScore(10);
@@ -113,6 +111,11 @@ public class Enemy : MonoBehaviour
         }
 
         
+    }
+
+    public bool IsDead()
+    {
+        return _isDestroyed;
     }
 
    

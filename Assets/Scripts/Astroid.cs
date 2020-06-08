@@ -25,7 +25,7 @@ public class Astroid : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "PlayerLaser")
+        if (other.tag == "PlayerLaser" || other.tag == "PlayerMissile")
         {
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(other.gameObject);

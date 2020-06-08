@@ -9,10 +9,11 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _powerups;
     [SerializeField]
-    private float enemyWaitTime = 5.0f;
+    private GameObject _missilePrefab;
+    [SerializeField]
+    private float enemyWaitTime = 2.5f;
     [SerializeField]
     private GameObject _enemyContainer;
-    
 
     private bool _stopSpawning = false;
 
@@ -46,11 +47,22 @@ public class SpawnManager : MonoBehaviour
         
     IEnumerator SpawnPowerupRoutine()
     {
+        int powerupCount = 0;
+        int missileSpawnCount = Random.Range(6, 10);
         yield return new WaitForSeconds(2);
         while(_stopSpawning == false)
         {
             GameObject newPowerup = Instantiate(_powerups[Random.Range(0,5)], new Vector3(Random.Range(-8f, 8f), 8, 0), Quaternion.identity);
+            powerupCount += 1;
+           
             yield return new WaitForSeconds(Random.Range(3, 8));
+            if (powerupCount == missileSpawnCount)
+            {
+                GameObject newMissile = Instantiate(_missilePrefab, new Vector3(Random.Range(-8f, 8f), 8, 0), Quaternion.identity);
+                powerupCount = 0;
+                missileSpawnCount = Random.Range(6, 10);
+                yield return new WaitForSeconds(Random.Range(3, 8));
+            }
         }
         
     }
@@ -61,5 +73,6 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine("SpawnPowerupRoutine");
     }
 
+    
     
 }

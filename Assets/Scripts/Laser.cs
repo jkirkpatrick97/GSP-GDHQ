@@ -18,6 +18,7 @@ public class Laser : MonoBehaviour
         else
         {
             MoveDown();
+            this.tag = "EnemyLaser";
         }
     }
 
@@ -54,7 +55,7 @@ public class Laser : MonoBehaviour
     public void AssignEnemyLaser()
     {
         _isEnemyLaser = true;
-        Debug.Log("AssignEL called");
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)

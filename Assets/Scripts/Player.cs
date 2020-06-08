@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
+    private GameObject _missilePrefab;
+    [SerializeField]
     private GameObject _tripleshotPrefab;
     [SerializeField]
     private float _fireRate = 0.15f;
@@ -33,7 +35,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _ammoCount = 15;
 
-
+    private bool _missileActive = false;
     private float lastDamageTime = 0;
     private int _shieldStrength = 0;
 
@@ -149,7 +151,12 @@ public class Player : MonoBehaviour
     void FireLaser()
     {            
         _canFire = Time.time + _fireRate;
-        if (_tripleshotEnabled == true && _ammoCount > 2)
+        if (_missileActive == true)
+        {
+            Instantiate(_missilePrefab, transform.localPosition + _laserOffset, Quaternion.identity);
+        }
+
+        else if (_tripleshotEnabled == true && _ammoCount > 2)
         {
             Instantiate(_tripleshotPrefab, transform.localPosition + _laserOffset, Quaternion.identity);
             _ammoCount -= 3;
@@ -224,7 +231,20 @@ public class Player : MonoBehaviour
         }
     }
 
-    
+    public void MissileActive()
+    {
+        _missileActive = true;
+        StartCoroutine(MissleActivePowerDownRoutine());
+
+    }
+
+    IEnumerator MissleActivePowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5);
+        _missileActive = false;
+    }
+
+
     public void TripleShotActive()
     {
         _tripleshotEnabled = true;
