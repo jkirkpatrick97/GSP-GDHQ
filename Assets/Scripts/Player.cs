@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 3.5f;
+    private float _baseSpeed = 3.5f;
     [SerializeField]
     private float _speedMultiplier = 2;
     [SerializeField]
@@ -33,11 +33,19 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _thusterBoostMultiplier = 1.6f;
     [SerializeField]
+    private float _boostedSpeed = 7.4f;
+    
+    [SerializeField]
     private int _ammoCount = 15;
+    [SerializeField]
+    private float _thrustTimer = 5.0f;
+    [SerializeField]
+    private float _thrustTimerMax = 5.0f;
 
     private bool _missileActive = false;
     private float lastDamageTime = 0;
     private int _shieldStrength = 0;
+    private float _speed;
 
     private SpawnManager _spawnManager;
 
@@ -53,17 +61,21 @@ public class Player : MonoBehaviour
     private AudioClip _explosionSoundClip;
     [SerializeField]
     private AudioClip _noAmmoSoundClip;
+    [SerializeField]
+    private AudioClip _thrustersClip;
     
     private AudioSource _audioSource;
+
+    public CameraShake cameraShake;
 
    
 
     // Start is called before the first frame update
     void Start()
     {
-      
-
+        _speed = _baseSpeed;
         transform.position = new Vector3(0, 0, 0);
+       
 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_spawnManager == null)
@@ -95,21 +107,48 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+        ThrusterEngaged();
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             FireLaser();
         }
 
-        if(Input.GetKeyDown(KeyCode.LeftShift))
+        
+                
+    }
+
+    void ThrusterEngaged()
+    {
+        if (_thrustTimer < _thrustTimerMax && Input.GetKey(KeyCode.LeftShift) == false)
         {
-            _speed *= _thusterBoostMultiplier;
+            _thrustTimer += Time.deltaTime * 0.5f;
+            _uiManager.UpdateThrusterBar(_thrustTimer, _thrustTimerMax);
+        }
+        if(_thrustTimer > _thrustTimerMax)
+        {
+            _thrustTimer = _thrustTimerMax;
+            _uiManager.UpdateThrusterBar(_thrustTimer, _thrustTimerMax);
+        }
+
+        
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _speed = _boostedSpeed;
+            _thrustTimer -= Time.deltaTime;
+            _uiManager.UpdateThrusterBar(_thrustTimer, _thrustTimerMax);
+            if (_thrustTimer < 0)
+            {
+                _thrustTimer = 0;
+                _speed = _baseSpeed;
+                _uiManager.UpdateThrusterBar(_thrustTimer, _thrustTimerMax);
+            }
         }
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            _speed /= _thusterBoostMultiplier;
+            _speed = _baseSpeed;
+            _audioSource.Stop();
         }
-                
     }
 
     void CalculateMovement()
@@ -196,8 +235,6 @@ public class Player : MonoBehaviour
                 {
                     _playerShield.GetComponent<SpriteRenderer>().color = Color.red;
                 }
-                
-
                 if(_shieldStrength < 1)
                 {
                     _playerShield.SetActive(false);
@@ -206,6 +243,7 @@ public class Player : MonoBehaviour
             }
 
             _lives -= 1;
+            StartCoroutine(cameraShake.Shake(.15f, .12f));
             _audioSource.clip = _explosionSoundClip;
             _audioSource.Play();
             if (_lives == 2)
@@ -217,16 +255,14 @@ public class Player : MonoBehaviour
                 _leftEngine.SetActive(true);
             }
 
-            _uiManager.UpdateLives(_lives);
-
             if (_lives < 1)
             {
                 _spawnManager.OnPlayerDeath();
-
-                Destroy(this.gameObject);
+                this.gameObject.SetActive(false);
+                Destroy(this.gameObject, 2.0f);
 
             }
-
+            _uiManager.UpdateLives(_lives);
             lastDamageTime = Time.time;
         }
     }

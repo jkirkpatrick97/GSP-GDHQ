@@ -20,6 +20,9 @@ public class UIManager : MonoBehaviour
     private Text _ammoCountText;
 
     private GameManager _gamemanager;
+
+    [SerializeField]
+    Image thrusterBar;
         
     // Start is called before the first frame update
     void Start()
@@ -59,6 +62,11 @@ public class UIManager : MonoBehaviour
         {
             GameOverSequence();
         }
+    }
+
+    public void UpdateThrusterBar(float timeLeft, float timeMax)
+    {
+        thrusterBar.fillAmount = timeLeft / timeMax;
     }
 
     private void GameOverSequence()
